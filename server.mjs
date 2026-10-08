@@ -121,7 +121,7 @@ async function api(req,res,path){
       // Upstream errors may echo headers or key fragments: never expose raw errors.
       const missing=error.status===401&&error.message.startsWith('请先点击');
       if(missing)json(res,401,{error:error.message});
-      else{console.error('[厨房] 请求失败',Number(error.status)||502);json(res,502,{error:'Jev 调用没有成功，请检查你的 key、账户余额和网络后重试。'});}
+      else{const diagnostic=value=>typeof value==='string'&&/^[A-Za-z0-9_]{1,50}$/.test(value)?value:undefined;console.error('[厨房] 请求失败',JSON.stringify({status:Number(error.status)||502,type:diagnostic(error.name),causeType:diagnostic(error.cause?.name),causeCode:diagnostic(error.cause?.code)}));json(res,502,{error:'Jev 调用没有成功，请检查你的 key、账户余额和网络后重试。'});}
     }}
     finally{s.busy=false;res.off('close',onClose);}
     return;

@@ -29,6 +29,8 @@
 需要 Node.js **22.12 或更新版本**。安装依赖后构建并启动：
 
 ```bash
+git clone https://github.com/BHD110/jev-burger-rush.git
+cd jev-burger-rush
 npm install
 npm run build
 npm start
@@ -61,6 +63,20 @@ location ^~ /jev-burger/ {
 ```
 
 将完整录屏单独放在服务器的 `/home/hxy/apps/jev-burger-rush/media/lunch-rush.mp4`；这一路径只是部署示例，可以按实际服务器目录调整；让 BURGER_MEDIA_DIR 指向该文件所在目录，服务支持视频分段读取和拖动播放。视频文件不提交到 Git。访问 `/jev-burger/media/lunch-rush.mp4` 应能播放录屏，`/jev-burger/` 应能打开游戏。
+
+### 内存较少的服务器
+
+本次在线版本在本地构建，再上传到服务器，避免服务器安装开发依赖时内存不足。先安装依赖并以 `/jev-burger/` 前缀构建，将源码、`dist/` 和完整的 `node_modules/@typesafe-ai/sdk/` 上传到服务器。不要上传 `.env`、日志或其他开发依赖。当前固定的 SDK 0.6.0 没有运行时依赖，服务器只需 Node.js；更换 SDK 版本后请重新核对依赖。
+
+在线服务使用用户级 systemd，在 `/home/hxy/.config/systemd/user/jev-burger-rush.service` 配置 `WorkingDirectory`、`ExecStart`（`node server.mjs --production`），以及 `BURGER_PORT=5023` 和 `BURGER_MEDIA_DIR`。重启与状态检查：
+
+```bash
+systemctl --user restart jev-burger-rush
+systemctl --user status jev-burger-rush
+curl https://lcgf.xyz/jev-burger/api/health
+```
+
+源码及 WebP 图片合计约 1.03 MB，录屏、依赖、构建结果和运行日志不计入 Git 源码；原始视频通过独立媒体文件提供。
 
 ## 项目范围
 
