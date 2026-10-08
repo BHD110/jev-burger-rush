@@ -11,6 +11,10 @@ const root=dirname(fileURLToPath(import.meta.url));
 const port=Number(process.env.BURGER_PORT||5193), model=process.env.BURGER_MODEL||'jev-latest';
 // No server-owned credentials or environment fallback. Keys are visitor-specific and never persisted.
 const visitors=new Map(), KEY_TTL=2*60*60*1000;
+const expiryTimer=setInterval(()=>{
+  const now=Date.now();
+  for(const [id,v] of visitors){if(now>=v.keyExpires)v.key=null;if(now-v.touched>KEY_TTL)visitors.delete(id);}
+},1000);expiryTimer.unref();
 const cookieName='jev_burger_session';
 function visitor(req,res){
   const now=Date.now();
