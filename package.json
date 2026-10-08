@@ -1,0 +1,23 @@
+{
+  "name": "jev-burger-rush",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs --production",
+    "build": "vite build",
+    "test": "node --test test/*.test.mjs",
+    "test:jev": "node scripts/test-jev.mjs"
+  },
+  "dependencies": {
+    "@typesafe-ai/sdk": "0.6.0"
+  },
+  "devDependencies": {
+    "vite": "7.3.6"
+  },
+  "description": "A Jev-powered burger kitchen: place orders, play manually or let Jev manage the lunch rush.",
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
